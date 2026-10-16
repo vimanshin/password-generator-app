@@ -1,5 +1,37 @@
 @use '../abstracts/mixins';
 
+// Ползунок слайдера описан один раз, а подключается в два правила:
+// ::-webkit-slider-thumb и ::-moz-range-thumb нельзя писать через запятую —
+// браузер, не знающий один из селекторов, выбросит всё правило целиком.
+
+// Миксин: базовый вид ползунка слайдера — круг 28×28
+@mixin slider-thumb {
+  // Псевдоэлемент не попадает под глобальный *, поэтому box-sizing задаём явно:
+  // рамка рисуется внутри 28px и на hover круг не растёт
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  background-color: var(--color-grey-200);
+
+  // Прозрачная рамка невидима на светлом фоне, а на hover меняется только цвет
+  border: 2px solid transparent;
+  border-radius: 50%;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  @include mixins.reduced-motion {
+    transition: none;
+  }
+}
+
+// Миксин: вид ползунка при наведении на слайдер
+@mixin slider-thumb-hover {
+  background-color: var(--color-grey-850);
+  border-color: var(--color-green-200);
+}
+
 // Карточка настроек: длина, опции, сила пароля и кнопка
 .settings {
   display: flex;
@@ -7,6 +39,94 @@
   gap: var(--spacing-400);
   padding: var(--spacing-200);
   background-color: var(--color-grey-800);
+
+  &__length {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-100);
+  }
+
+  &__length-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__label {
+    color: var(--color-grey-200);
+
+    @include mixins.text-preset-4;
+  }
+
+  &__length-value {
+    color: var(--color-green-200);
+
+    @include mixins.text-preset-2;
+  }
+
+  &__slider {
+    // Доля заливки трека в процентах; TS обновляет её при каждом input
+    --fill: 0%;
+
+    display: block;
+    width: 100%;
+
+    // Высота по ползунку, иначе он вылезет за пределы input
+    height: 28px;
+    margin: 0;
+    appearance: none;
+    cursor: pointer;
+    background: transparent;
+
+    // Chromium и Safari: нативной заливки нет, рисуем её градиентом
+    // с жёсткой границей цветов в точке --fill
+    &::-webkit-slider-runnable-track {
+      height: 8px;
+      background: linear-gradient(
+        to right,
+        var(--color-green-200) var(--fill),
+        var(--color-grey-850) var(--fill)
+      );
+    }
+
+    // (8 - 28) / 2 = -10px: WebKit прижимает ползунок к верху трека
+    &::-webkit-slider-thumb {
+      margin-top: -10px;
+      appearance: none;
+
+      @include slider-thumb;
+    }
+
+    // Firefox: пустой трек и нативная заливка до ползунка
+    &::-moz-range-track {
+      height: 8px;
+      background-color: var(--color-grey-850);
+    }
+
+    &::-moz-range-progress {
+      height: 8px;
+      background-color: var(--color-green-200);
+    }
+
+    // Firefox сам центрирует ползунок на треке, margin не нужен
+    &::-moz-range-thumb {
+      @include slider-thumb;
+    }
+
+    &:hover::-webkit-slider-thumb {
+      @include slider-thumb-hover;
+    }
+
+    &:hover::-moz-range-thumb {
+      @include slider-thumb-hover;
+    }
+
+    // Рамка вокруг всего слайдера — как у поля пароля
+    &:focus-visible {
+      outline: 2px solid var(--color-green-200);
+      outline-offset: 2px;
+    }
+  }
 
   &__options {
     // min-inline-size: 0 — fieldset по умолчанию не сжимается уже контента
@@ -18,5 +138,17 @@
 
   @include mixins.tablet {
     padding: var(--spacing-300) var(--spacing-400);
+
+    &__length {
+      gap: var(--spacing-200);
+    }
+
+    &__label {
+      @include mixins.text-preset-3;
+    }
+
+    &__length-value {
+      @include mixins.text-preset-1;
+    }
   }
 }
