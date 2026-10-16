@@ -1,0 +1,10 @@
+// Подключение шрифтов проекта.
+// В макете используется только JetBrains Mono Bold, поэтому грузим одно начертание.
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  src: url('@/assets/fonts/static/JetBrainsMono-Bold.ttf') format('truetype');
+  font-display: swap;
+}

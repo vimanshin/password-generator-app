@@ -47,3 +47,30 @@
     @content;
   }
 }
+
+// Типографика из Figma: Text Preset 1–4.
+// Шрифт и font-weight: 700 заданы один раз на :root, пресет меняет только размер.
+
+// Миксин: Text Preset 1 — 32px / 42px
+@mixin text-preset-1 {
+  font-size: 2rem;
+  line-height: calc(42 / 32);
+}
+
+// Миксин: Text Preset 2 — 24px / 32px
+@mixin text-preset-2 {
+  font-size: 1.5rem;
+  line-height: calc(32 / 24);
+}
+
+// Миксин: Text Preset 3 — 18px / 24px
+@mixin text-preset-3 {
+  font-size: 1.125rem;
+  line-height: calc(24 / 18);
+}
+
+// Миксин: Text Preset 4 — 16px / 20px
+@mixin text-preset-4 {
+  font-size: 1rem;
+  line-height: calc(20 / 16);
+}

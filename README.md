@@ -26,7 +26,7 @@
 
 ### Скриншот
 
-![](./screenshot.jpg) 545
+![](./screenshot.jpg)
 
 ### Ссылки
 

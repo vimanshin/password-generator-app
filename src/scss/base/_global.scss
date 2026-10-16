@@ -1,3 +1,5 @@
+@use '../abstracts/mixins';
+
 // Глобальная база проекта: токены, базовые элементы и минимальный reset.
 // Всё, что относится к конкретной секции или компоненту, живёт в components/.
 // Цвета и шрифты макета объявляй здесь как CSS-переменные в :root.
@@ -9,17 +11,72 @@
 }
 
 :root {
-  --font-sans: system-ui, 'Segoe UI', roboto, sans-serif;
+  // Цвета
+  --color-white: #fff;
+  --color-grey-950: #08070b;
+  --color-grey-900: #14131b;
+  --color-grey-850: #18171f;
+  --color-grey-800: #24232c;
+  --color-grey-700: #54535b;
+  --color-grey-600: #817d92;
+  --color-grey-200: #e6e5ea;
+  --color-green-200: #a4ffaf;
+  --color-yellow-300: #f8cd65;
+  --color-orange-400: #fb7c58;
+  --color-red-500: #f64a4a;
+  --gradient-1: linear-gradient(
+    to right,
+    var(--color-grey-900),
+    var(--color-grey-950)
+  );
 
-  font-family: var(--font-sans);
+  // Шрифт
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  // Отступы: имя совпадает с Figma, в комментарии — значение в px
+  --spacing-100: 0.5rem; // 8
+  --spacing-200: 1rem; // 16
+  --spacing-300: 1.5rem; // 24
+  --spacing-400: 2rem; // 32
+  --spacing-500: 2.5rem; // 40
+  --spacing-700: 3.5rem; // 56
+  --spacing-800: 4rem; // 64
+  --spacing-1000: 5rem; // 80
+  --spacing-1300: 6.5rem; // 104
+  --spacing-1600: 8rem; // 128
+  --spacing-2000: 10rem; // 160
+  --spacing-2200: 11rem; // 176
+  --spacing-2300: 11.5rem; // 184
+
+  font-family: var(--font-mono);
+  font-weight: 700;
   line-height: 1.5;
+  color: var(--color-grey-200);
+
+  // Сайт только в тёмной теме: браузер сделает тёмными скроллбар и поля форм
+  color-scheme: dark;
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
+  // svh — высота экрана при видимой адресной строке: не прыгает при скролле
+  min-height: 100svh;
+  padding-block: var(--spacing-800) var(--spacing-400);
+  padding-inline: var(--spacing-200);
   margin: 0;
+
+  // Фон body браузер переносит на весь холст страницы, поэтому градиент
+  // не обрывается белым при прокрутке и overscroll; цвет — подложка
+  // на случай, если градиент не загрузится или холст выше body
+  background-color: var(--color-grey-950);
+  background-image: var(--gradient-1);
+
+  @include mixins.tablet {
+    // 133px из Figma, разовое значение — токена в макете нет
+    padding-block-start: 8.3125rem;
+  }
 }
 
 img,
