@@ -129,11 +129,66 @@
   }
 
   &__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-200);
+
     // min-inline-size: 0 — fieldset по умолчанию не сжимается уже контента
     min-inline-size: 0;
     padding: 0;
     margin: 0;
     border: 0;
+  }
+
+  &__option {
+    display: flex;
+    gap: var(--spacing-200);
+    align-items: center;
+  }
+
+  &__checkbox {
+    // Не даём квадрату сплющиться, если длинная подпись займёт всю строку
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    appearance: none;
+    cursor: pointer;
+    background-color: transparent;
+    border: 2px solid var(--color-grey-200);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+
+    // Галочка — фоновая картинка: у input псевдоэлементы ненадёжны
+    &:checked {
+      background-color: var(--color-green-200);
+      background-image: url('@/assets/images/icon-check.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      border-color: var(--color-green-200);
+    }
+
+    // Hover на всю строку: курсор над подписью тоже подсвечивает квадрат
+    .settings__option:hover & {
+      border-color: var(--color-green-200);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-green-200);
+      outline-offset: 2px;
+    }
+
+    @include mixins.reduced-motion {
+      transition: none;
+    }
+  }
+
+  &__option-label {
+    color: var(--color-grey-200);
+    cursor: pointer;
+
+    @include mixins.text-preset-4;
   }
 
   @include mixins.tablet {
@@ -149,6 +204,14 @@
 
     &__length-value {
       @include mixins.text-preset-1;
+    }
+
+    &__option {
+      gap: var(--spacing-300);
+    }
+
+    &__option-label {
+      @include mixins.text-preset-3;
     }
   }
 }

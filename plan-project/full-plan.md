@@ -28,7 +28,7 @@
 - [x] 01. Разметка всего приложения и раскладка колонки · `html-writer`, `scss-writer`
 - [x] 02. Поле пароля: Empty / Filled / Copied, hover иконки · `scss-writer`
 - [x] 03. Слайдер Character Length: свой `input[type=range]` · `scss-writer`
-- [ ] 04. Чекбоксы через `appearance: none` · `scss-writer`
+- [x] 04. Чекбоксы через `appearance: none` · `scss-writer`
 - [ ] 05. Блок силы (`data-strength`) и кнопка GENERATE · `scss-writer`
 - [ ] 06. Логика генерации, силы и заливки слайдера · `ts-writer`
 - [ ] 07. Копирование в буфер, состояние COPIED, `aria-live` · `ts-writer`
