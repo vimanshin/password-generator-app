@@ -26,7 +26,7 @@
 
 - [x] 00. Подготовка base — фон, высота экрана, отступы страницы · `scss-writer`
 - [x] 01. Разметка всего приложения и раскладка колонки · `html-writer`, `scss-writer`
-- [ ] 02. Поле пароля: Empty / Filled / Copied, hover иконки · `scss-writer`
+- [x] 02. Поле пароля: Empty / Filled / Copied, hover иконки · `scss-writer`
 - [ ] 03. Слайдер Character Length: свой `input[type=range]` · `scss-writer`
 - [ ] 04. Чекбоксы через `appearance: none` · `scss-writer`
 - [ ] 05. Блок силы (`data-strength`) и кнопка GENERATE · `scss-writer`
