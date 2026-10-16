@@ -191,8 +191,77 @@
     @include mixins.text-preset-4;
   }
 
+  &__footer {
+    // Опорная точка для пустой подсказки с position: absolute
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-200);
+  }
+
+  &__generate {
+    display: flex;
+    gap: var(--spacing-200);
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: var(--spacing-700); // 56
+    padding: 0 var(--spacing-200);
+    color: var(--color-grey-800);
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: var(--color-green-200);
+
+    // Рамка есть всегда: на hover меняется только фон, и кнопка не прыгает на 2px
+    border: 2px solid var(--color-green-200);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+
+    // Стрелка залита currentColor, поэтому перекрашивается вместе с текстом
+    &:hover {
+      color: var(--color-green-200);
+      background-color: transparent;
+    }
+
+    // Между рамкой и outline остаётся тёмная полоса 2px — линии не сливаются
+    &:focus-visible {
+      outline: 2px solid var(--color-green-200);
+      outline-offset: 2px;
+    }
+
+    @include mixins.text-preset-4;
+
+    @include mixins.reduced-motion {
+      transition: none;
+    }
+  }
+
+  &__generate-icon {
+    flex-shrink: 0;
+
+    // Размер задаём явно: base-reset ставит svg { height: auto }
+    width: 0.75rem; // 12
+    height: 0.75rem;
+  }
+
+  &__hint {
+    // orange-400 на grey-800 — 6.01:1; red-500 даёт лишь 4.44:1 и не проходит AA
+    color: var(--color-orange-400);
+    text-align: center;
+
+    // Пустая подсказка выходит из потока и не добавляет gap футера,
+    // но остаётся в дереве доступности как live region
+    &:empty {
+      @include mixins.visually-hidden;
+    }
+
+    @include mixins.text-preset-4;
+  }
+
   @include mixins.tablet {
-    padding: var(--spacing-300) var(--spacing-400);
+    // Снизу в Figma 41px (карточка 528): ближайший токен — 40
+    padding: var(--spacing-300) var(--spacing-400) var(--spacing-500);
 
     &__length {
       gap: var(--spacing-200);
@@ -211,6 +280,17 @@
     }
 
     &__option-label {
+      @include mixins.text-preset-3;
+    }
+
+    &__footer {
+      gap: var(--spacing-400);
+    }
+
+    &__generate {
+      gap: var(--spacing-300);
+      min-height: 4.0625rem; // 65
+
       @include mixins.text-preset-3;
     }
   }

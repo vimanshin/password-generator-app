@@ -1,0 +1,93 @@
+@use '../abstracts/mixins';
+
+// Индикатор силы пароля. Уровень выставляет TS в data-strength:
+// "" | too-weak | weak | medium | strong
+.strength {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  // Высоту держит min-height, а не вертикальный padding:
+  // отступы из Figma не сходятся с токенами (72 − 28 = 44 → 22)
+  min-height: var(--spacing-700); // 56
+  padding-inline: var(--spacing-200);
+  background-color: var(--color-grey-850);
+
+  // Каждый уровень задаёт только цвет — сами полоски красит одно правило ниже
+  &[data-strength='too-weak'] {
+    --strength-color: var(--color-red-500);
+  }
+
+  &[data-strength='weak'] {
+    --strength-color: var(--color-orange-400);
+  }
+
+  &[data-strength='medium'] {
+    --strength-color: var(--color-yellow-300);
+  }
+
+  &[data-strength='strong'] {
+    --strength-color: var(--color-green-200);
+  }
+
+  &__label {
+    color: var(--color-grey-600);
+    text-transform: uppercase;
+
+    @include mixins.text-preset-4;
+  }
+
+  &__meter {
+    display: flex;
+    gap: var(--spacing-200);
+    align-items: center;
+  }
+
+  &__level {
+    color: var(--color-grey-200);
+    text-transform: uppercase;
+
+    // Пустой уровень не должен съедать gap 16 перед полосками.
+    // Live region здесь весь .strength (aria-atomic), а пустому абзацу
+    // нечего озвучивать, поэтому display: none ничего не прячет
+    &:empty {
+      display: none;
+    }
+
+    @include mixins.text-preset-3;
+  }
+
+  &__bars {
+    display: flex;
+    gap: var(--spacing-100);
+  }
+
+  &__bar {
+    width: 10px;
+    height: 28px;
+    background-color: transparent;
+    border: 2px solid var(--color-grey-200);
+
+    // -n + N выбирает первые N полосок: при n = 0, 1, 2… получаем N, N − 1, N − 2…
+    .strength[data-strength='too-weak'] &:nth-child(-n + 1),
+    .strength[data-strength='weak'] &:nth-child(-n + 2),
+    .strength[data-strength='medium'] &:nth-child(-n + 3),
+    .strength[data-strength='strong'] & {
+      background-color: var(--strength-color);
+      border-color: var(--strength-color);
+    }
+  }
+
+  @include mixins.tablet {
+    min-height: 4.5rem; // 72
+    padding-inline: var(--spacing-400);
+
+    &__label {
+      @include mixins.text-preset-3;
+    }
+
+    &__level {
+      @include mixins.text-preset-2;
+    }
+  }
+}

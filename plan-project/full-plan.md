@@ -29,7 +29,7 @@
 - [x] 02. Поле пароля: Empty / Filled / Copied, hover иконки · `scss-writer`
 - [x] 03. Слайдер Character Length: свой `input[type=range]` · `scss-writer`
 - [x] 04. Чекбоксы через `appearance: none` · `scss-writer`
-- [ ] 05. Блок силы (`data-strength`) и кнопка GENERATE · `scss-writer`
+- [x] 05. Блок силы (`data-strength`) и кнопка GENERATE · `scss-writer`
 - [ ] 06. Логика генерации, силы и заливки слайдера · `ts-writer`
 - [ ] 07. Копирование в буфер, состояние COPIED, `aria-live` · `ts-writer`
 - [ ] 08. Финал: woff2, Playwright 375/768/1440, `final-review`, README · `final-review`
