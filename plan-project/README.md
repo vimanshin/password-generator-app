@@ -17,7 +17,7 @@ Figma: [Designs](https://www.figma.com/design/v92FacRPzelhGMaYbcSAfe/password-ge
 | [04. Чекбоксы](stage-04-checkboxes.md)                      | ✅     |
 | [05. Сила пароля и кнопка](stage-05-strength-and-button.md) | ✅     |
 | [06. Логика генерации](stage-06-generate-logic.md)          | ✅     |
-| [07. Копирование](stage-07-copy.md)                         | 🔄     |
-| [08. Финал](stage-08-final.md)                              | ⏳     |
+| [07. Копирование](stage-07-copy.md)                         | ✅     |
+| [08. Финал](stage-08-final.md)                              | 🔄     |
 
 Статусы: ⏳ ожидает · 🔄 в работе · ✅ готово
