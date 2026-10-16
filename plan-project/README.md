@@ -11,8 +11,8 @@ Figma: [Designs](https://www.figma.com/design/v92FacRPzelhGMaYbcSAfe/password-ge
 | Этап                                                        | Статус |
 | ----------------------------------------------------------- | ------ |
 | [00. Подготовка base](stage-00-base.md)                     | ✅     |
-| [01. Разметка приложения](stage-01-markup.md)               | 🔄     |
-| [02. Поле пароля](stage-02-password-field.md)               | ⏳     |
+| [01. Разметка приложения](stage-01-markup.md)               | ✅     |
+| [02. Поле пароля](stage-02-password-field.md)               | 🔄     |
 | [03. Слайдер длины](stage-03-length-slider.md)              | ⏳     |
 | [04. Чекбоксы](stage-04-checkboxes.md)                      | ⏳     |
 | [05. Сила пароля и кнопка](stage-05-strength-and-button.md) | ⏳     |

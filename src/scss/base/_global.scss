@@ -87,3 +87,21 @@ video {
   max-width: 100%;
   height: auto;
 }
+
+// Отступы задаёт родительский gap, поэтому браузерные margin у заголовка
+// и абзацев только мешают — сбрасываем их один раз, а не в каждом компоненте
+h1,
+p {
+  margin: 0;
+}
+
+// Поля и кнопки не наследуют шрифт и цвет — браузер ставит свои системные
+input,
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.visually-hidden {
+  @include mixins.visually-hidden;
+}
