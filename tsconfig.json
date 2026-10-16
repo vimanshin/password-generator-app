@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "es2023",
+    "module": "esnext",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    /* Типы node нужны только vite.config.ts, но видны и в src.
+       В браузерном коде не используй process, Buffer, require и node:* —
+       tsc промолчит, а страница упадёт. Режим сборки — import.meta.env.MODE */
+    "types": ["vite/client", "node"],
+    "skipLibCheck": true,
+
+    /* Режим сборщика: модули ищет Vite, расширения в импортах не обязательны */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Алиас @ -> src, зеркалит resolve.alias из vite.config.ts */
+    "paths": { "@/*": ["./src/*"] },
+
+    /* Строгость. В TypeScript 6 strict включён по умолчанию,
+       но оставлен явно: конфиг читают люди. */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src", "vite.config.ts"]
+}

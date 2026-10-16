@@ -1,0 +1,38 @@
+{
+  "name": "password-generator-app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:styles": "stylelint \"src/**/*.{css,scss}\"",
+    "lint:styles:fix": "stylelint \"src/**/*.{css,scss}\" --fix",
+    "lint:ts": "eslint .",
+    "lint:ts:fix": "eslint . --fix",
+    "check": "npm run format:check && npm run lint:styles && npm run lint:ts && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.6",
+    "eslint": "^10.11.0",
+    "prettier": "3.9.9",
+    "sass": "^1.105.0",
+    "sharp": "^0.35.4",
+    "stylelint": "17.15.0",
+    "stylelint-config-recess-order": "7.8.0",
+    "stylelint-config-standard-scss": "17.0.0",
+    "stylelint-order": "8.1.1",
+    "svgo": "^4.1.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.70.1",
+    "vite": "^8.3.0",
+    "vite-plugin-image-optimizer": "^2.0.3"
+  }
+}

@@ -1,0 +1,32 @@
+// Глобальная база проекта: токены, базовые элементы и минимальный reset.
+// Всё, что относится к конкретной секции или компоненту, живёт в components/.
+// Цвета и шрифты макета объявляй здесь как CSS-переменные в :root.
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --font-sans: system-ui, 'Segoe UI', roboto, sans-serif;
+
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+}
+
+img,
+svg,
+picture,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}

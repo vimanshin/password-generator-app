@@ -1,0 +1,49 @@
+@use 'variables';
+
+// Брейкпоинты в подходе mobile-first: базовые стили пишутся без media query,
+// а эти миксины только расширяют их на больших экранах.
+// Синтаксис диапазонов Media Queries Level 4: width >= вместо min-width.
+
+// Миксин: применяет вложенные стили от планшета и шире
+@mixin tablet {
+  @media (width >= variables.$breakpoint-tablet) {
+    @content;
+  }
+}
+
+// Миксин: применяет вложенные стили от десктопа и шире
+@mixin desktop {
+  @media (width >= variables.$breakpoint-desktop) {
+    @content;
+  }
+}
+
+// Миксин: применяет вложенные стили только в диапазоне планшета,
+// когда десктопные правила не должны срабатывать
+@mixin tablet-only {
+  @media (variables.$breakpoint-tablet <= width < variables.$breakpoint-desktop) {
+    @content;
+  }
+}
+
+// Миксин: скрывает элемент визуально, оставляя его доступным скринридерам.
+// display: none так использовать нельзя — оно прячет контент и от них тоже.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}
+
+// Миксин: отключает анимации для тех, кто просил уменьшить движение.
+// Оборачивай им transition и animation, а не отключай их глобально.
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

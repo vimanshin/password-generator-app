@@ -1,0 +1,37 @@
+# Зависимости: восстанавливаются командой npm install
+node_modules
+
+# Результат сборки: пересоздаётся командой npm run build
+dist
+
+# Логи npm при падении команды
+*.log
+
+# Локальные файлы, которые не должны попасть в git, например .env.local
+*.local
+
+# Личные разрешения Claude Code: машинозависимые пути, в шаблоне им не место.
+# Общие настройки проекта лежат в .claude/settings.json и коммитятся.
+.claude/settings.local.json
+
+# Артефакты Playwright MCP: скриншоты и снапшоты страниц
+.playwright-mcp
+
+# Настройки других редакторов: проект ведётся в WebStorm
+.vscode/
+
+# Личные файлы WebStorm поверх тех, что он исключает сам в .idea/.gitignore.
+# Состояние вкладок плагина Claude Code меняется каждую сессию, а имя модуля
+# содержит название этой папки и в новом проекте будет неверным —
+# WebStorm создаст оба файла заново при первом открытии.
+.idea/claudeCodeEditorTabs.xml
+.idea/modules.xml
+.idea/*.iml
+
+# Переменные окружения с секретами
+.env
+
+# Design files (please do not remove 🙂) — из стартового набора Frontend Mentor
+*.sketch
+*.fig
+*.xd

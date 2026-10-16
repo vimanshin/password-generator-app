@@ -1,0 +1,8 @@
+# Генерируется инструментами, править вручную нечего
+node_modules
+dist
+.playwright-mcp
+package-lock.json
+
+# SVG в public отдаются как есть, форматирование ломает минификацию
+public/**/*.svg
