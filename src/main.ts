@@ -50,22 +50,25 @@ const strengthLevel = getElement('strength-level', HTMLParagraphElement);
 const hint = getElement('generator-hint', HTMLParagraphElement);
 const generatorStatus = getElement('generator-status', HTMLParagraphElement);
 
-// Один таймер на обе фазы статуса: «показать Copied» и «спрятать Copied».
-// window.setTimeout всегда возвращает number (DOM), без конфликта с типами Node
-let copyStatusTimer: number | undefined;
-
 // Функция: создаёт «диктора» для live region — функцию, которая сначала очищает
 // регион, а через паузу пишет текст, чтобы скринридер прочитал даже повтор.
 // Таймер живёт в замыкании, поэтому у каждого региона он свой
-// Принимает: элемент live region (role="status")
+// Принимает: элемент live region (role="status") и, по желанию, через сколько
+// миллисекунд после показа спрятать текст; без него текст остаётся
 // Возвращает: функцию объявления; пустая строка очищает регион сразу
-function createAnnouncer(region: HTMLElement): (message: string) => void {
+function createAnnouncer(
+  region: HTMLElement,
+  hideAfterMs?: number
+): (message: string) => void {
+  // Один таймер на обе фазы: «показать текст» и «спрятать текст».
+  // window.setTimeout всегда возвращает number (DOM), без конфликта с типами Node
   let announceTimer: number | undefined;
 
-  // Функция: отменяет отложенную запись, очищает регион и планирует новый текст
+  // Функция: отменяет любую запланированную фазу, очищает регион и планирует новый текст
   // Принимает: текст объявления или пустую строку
   // Возвращает: ничего
   return (message) => {
+    // clearTimeout спокойно принимает undefined — проверка не нужна
     window.clearTimeout(announceTimer);
     announceTimer = undefined;
     // Строго пустая строка, иначе не сработает :empty в SCSS
@@ -74,8 +77,17 @@ function createAnnouncer(region: HTMLElement): (message: string) => void {
     if (message === '') return;
 
     // Колбэк: после паузы записывает текст в уже пустой регион
+    // и, если задано, планирует его скрытие тем же таймером
     announceTimer = window.setTimeout(() => {
       region.textContent = message;
+
+      if (hideAfterMs === undefined) return;
+
+      // Колбэк: прячет показанный текст по истечении hideAfterMs
+      announceTimer = window.setTimeout(() => {
+        announceTimer = undefined;
+        region.textContent = '';
+      }, hideAfterMs);
     }, ANNOUNCE_DELAY_MS);
   };
 }
@@ -84,6 +96,8 @@ function createAnnouncer(region: HTMLElement): (message: string) => void {
 const setHint = createAnnouncer(hint);
 // Невидимый статус генерации — только для скринридера
 const announceGeneratorStatus = createAnnouncer(generatorStatus);
+// «Copied» у кнопки: появляется после паузы и сам прячется через COPIED_VISIBLE_MS
+const announceCopyStatus = createAnnouncer(copyStatus, COPIED_VISIBLE_MS);
 
 // Функция: находит чекбокс набора внутри формы по атрибуту name
 // Принимает: имя набора символов
@@ -144,29 +158,14 @@ function renderStrength(level: StrengthLevel): void {
   strengthLevel.textContent = STRENGTH_LABELS[level];
 }
 
-// Функция: прячет «Copied» и отменяет любую запланированную фазу статуса
-// Принимает: ничего
-// Возвращает: ничего
-function resetCopyStatus(): void {
-  // clearTimeout спокойно принимает undefined — проверка не нужна
-  window.clearTimeout(copyStatusTimer);
-  copyStatusTimer = undefined;
-  // Строго пустая строка, иначе не сработает :empty в SCSS
-  copyStatus.textContent = '';
-}
-
-// Функция: объявляет «Copied» и через COPIED_VISIBLE_MS прячет его;
-// очистка и запись разнесены по времени, чтобы повторное копирование тоже озвучивалось
-// Принимает: ничего
-// Возвращает: ничего
-function showCopiedStatus(): void {
-  resetCopyStatus();
-
-  // Колбэк: после паузы пишет статус и планирует его скрытие
-  copyStatusTimer = window.setTimeout(() => {
-    copyStatus.textContent = COPIED_TEXT;
-    copyStatusTimer = window.setTimeout(resetCopyStatus, COPIED_VISIBLE_MS);
-  }, ANNOUNCE_DELAY_MS);
+// Функция: определяет, что не так с настройками генерации; сначала проверяет
+// длину, затем наборы символов
+// Принимает: длину пароля и количество выбранных наборов
+// Возвращает: текст подсказки или пустую строку, если настройки в порядке
+function getSettingsHint(length: number, setCount: number): string {
+  if (length === 0) return HINT_ZERO_LENGTH;
+  if (setCount === 0) return HINT_NO_SETS;
+  return '';
 }
 
 // Функция: выделяет пароль в поле, чтобы его можно было скопировать вручную
@@ -196,14 +195,14 @@ async function handleCopyClick(): Promise<void> {
   if (passwordInput.value !== password) return;
 
   if (!isCopied) {
-    resetCopyStatus();
+    announceCopyStatus('');
     selectPasswordForManualCopy();
     setHint(HINT_COPY_FAILED);
     return;
   }
 
   setHint('');
-  showCopiedStatus();
+  announceCopyStatus(COPIED_TEXT);
 }
 
 // Функция: прячет подсказку, как только пользователь меняет настройки, —
@@ -222,17 +221,12 @@ function handleFormSubmit(event: SubmitEvent): void {
 
   const length = lengthSlider.valueAsNumber;
   const selectedSets = getSelectedSets();
+  const settingsHint = getSettingsHint(length, selectedSets.length);
 
-  if (length === 0) {
+  if (settingsHint !== '') {
     // Отменяем возможное отложенное «New password generated» от прошлого клика
     announceGeneratorStatus('');
-    setHint(HINT_ZERO_LENGTH);
-    return;
-  }
-
-  if (selectedSets.length === 0) {
-    announceGeneratorStatus('');
-    setHint(HINT_NO_SETS);
+    setHint(settingsHint);
     return;
   }
 
@@ -241,7 +235,7 @@ function handleFormSubmit(event: SubmitEvent): void {
   passwordInput.value = generatePassword(length, selectedSets);
   renderStrength(strength);
   // Новый пароль ещё не скопирован — «Copied» рядом с ним был бы ложью
-  resetCopyStatus();
+  announceCopyStatus('');
   setHint('');
   announceGeneratorStatus(
     `New password generated. Strength: ${STRENGTH_LABELS[strength]}`
