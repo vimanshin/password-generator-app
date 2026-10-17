@@ -2,13 +2,13 @@
 
 ## Статус
 
-- Этап 0 (baseline) — 🟡 ждёт подтверждения плана и baseline-коммита
-- Текущий этап: —
+- Этап 0 (baseline) — ✅ готово
+- Текущий этап: 1 — мёртвый код
 
 ## Baseline
 
 - Исходный коммит: `e6e08e9` (рабочее дерево чистое)
-- Baseline-коммит: _появится после подтверждения_
+- Baseline-коммит: `724c623` — для `git diff 724c623` и `/code-review`
 - `npm run check`: ✅ проходит (Prettier, Stylelint, ESLint, tsc, vite build)
 - Console errors / warnings до рефакторинга: **нет** (0 / 0)
 - Скриншоты: `screenshots/baseline/` — mobile 375 (empty, filled), tablet 768, desktop 1440.
@@ -20,4 +20,4 @@
 
 - [findings.md](findings.md) — находки и риски
 - [issues.md](issues.md) — проблемы вне scope рефакторинга
-- [full-plan.md](full-plan.md) — план (после подтверждения)
+- [full-plan.md](full-plan.md) — план

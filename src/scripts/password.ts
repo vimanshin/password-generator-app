@@ -10,7 +10,7 @@ export type CharacterSetName = (typeof CHARACTER_SET_NAMES)[number];
 
 // Символы без пробела, кавычек и обратного слэша: их легко потерять
 // при копировании или сломать ими строку в конфиге или терминале
-export const CHARACTER_SETS = {
+const CHARACTER_SETS = {
   uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   lowercase: 'abcdefghijklmnopqrstuvwxyz',
   numbers: '0123456789',
@@ -23,7 +23,7 @@ const UINT32_RANGE = 2 ** 32;
 // Функция: возвращает криптостойкий случайный индекс без перекоса (modulo bias)
 // Принимает: количество вариантов — индекс будет от 0 до этого числа не включительно
 // Возвращает: случайный целый индекс
-export function getRandomIndex(optionCount: number): number {
+function getRandomIndex(optionCount: number): number {
   if (
     !Number.isInteger(optionCount) ||
     optionCount <= 0 ||
@@ -68,7 +68,7 @@ function pickRandomCharacter(characters: string): string {
 // Функция: перемешивает символы алгоритмом Фишера–Йетса, не меняя исходный массив
 // Принимает: массив символов
 // Возвращает: новый массив тех же символов в случайном порядке
-export function shuffle(characters: readonly string[]): string[] {
+function shuffle(characters: readonly string[]): string[] {
   const result = [...characters];
 
   for (let i = result.length - 1; i > 0; i--) {

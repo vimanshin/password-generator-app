@@ -1,6 +1,6 @@
 # Этап 1. Мёртвый код
 
-**Статус:** 🟡 в работе · **Findings:** F1, F2, F3 · **Риск:** 🟢 · **Writer:** scss-writer, ts-writer
+**Статус:** ✅ проверено, ждёт коммита · **Findings:** F1, F2, F3 · **Риск:** 🟢 · **Writer:** scss-writer, ts-writer
 
 ## Контроль риска
 
@@ -15,10 +15,14 @@
 
 ## Критерии готовности
 
-- [ ] `npm run check` зелёный
-- [ ] CSS совпадает с baseline
-- [ ] Grep по удалённым именам пуст
+- [x] `npm run check` зелёный
+- [x] CSS совпадает с baseline
+- [x] Grep по удалённым именам пуст
 
 ## Факт реализации
 
-—
+- `npm run check`: ✅
+- CSS и JS: побайтно идентичны baseline (те же хеши `index-B0wyysqq.css`, `index-CdAF9u24.js`) — скриншоты совпадают автоматически
+- Grep по `breakpoint-desktop`, `tablet-only`, `mixins.desktop`: 0 совпадений
+- Попутно: `refactoring/baseline` добавлен в `.prettierignore`
+- Коммит: _после подтверждения_
