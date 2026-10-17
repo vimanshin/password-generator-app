@@ -1,0 +1,59 @@
+# Сборка и публикация сайта на GitHub Pages при каждом push в main
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Кнопка «Run workflow» во вкладке Actions — запуск вручную
+  workflow_dispatch:
+
+# Минимальные права: читать код, публиковать Pages, подтверждать личность для деплоя
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Новый деплой ждёт текущий, а не обрывает его на середине
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить код
+        uses: actions/checkout@v7
+
+      - name: Установить Node из .nvmrc
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Установить зависимости строго по package-lock.json
+        run: npm ci
+
+      # check = Prettier + Stylelint + ESLint + tsc + сборка в dist/:
+      # с ошибками в коде сайт не опубликуется
+      - name: Проверить и собрать
+        run: npm run check
+
+      - name: Подготовить Pages
+        uses: actions/configure-pages@v6
+
+      - name: Упаковать dist/ для публикации
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Опубликовать на GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
