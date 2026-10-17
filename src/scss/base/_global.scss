@@ -12,7 +12,6 @@
 
 :root {
   // Цвета
-  --color-white: #fff;
   --color-grey-950: #08070b;
   --color-grey-900: #14131b;
   --color-grey-850: #18171f;
@@ -42,11 +41,6 @@
   --spacing-700: 3.5rem; // 56
   --spacing-800: 4rem; // 64
   --spacing-1000: 5rem; // 80
-  --spacing-1300: 6.5rem; // 104
-  --spacing-1600: 8rem; // 128
-  --spacing-2000: 10rem; // 160
-  --spacing-2200: 11rem; // 176
-  --spacing-2300: 11.5rem; // 184
 
   font-family: var(--font-mono);
   font-weight: 700;

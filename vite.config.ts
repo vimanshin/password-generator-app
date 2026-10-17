@@ -49,12 +49,7 @@ export default defineConfig({
   // поменяйте на '/имя-репозитория/' — иначе ссылки вида /icons.svg не найдутся.
   base: '/password-generator-app/',
 
-  plugins: [
-    ViteImageOptimizer({
-      // SVG-спрайт содержит внешние symbol, которые нельзя удалять как неиспользуемые.
-      exclude: /icons\.svg$/i,
-    }),
-  ],
+  plugins: [ViteImageOptimizer()],
 
   resolve: {
     alias: {

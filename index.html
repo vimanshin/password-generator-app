@@ -3,7 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Generate strong, random passwords with custom length and character types, check password strength, and copy the result to your clipboard in one click."
+    />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <!-- Шрифт заголовка и пароля нужен сразу: качаем его параллельно с CSS, а не после разбора стилей -->
+    <link
+      rel="preload"
+      href="/src/assets/fonts/JetBrainsMono-Bold.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <title>Frontend Mentor | Password generator app</title>
   </head>
   <body>
@@ -13,15 +25,17 @@
       <!-- Поле пароля: Empty — пустое value + плейсхолдер; Filled — TS пишет value -->
       <div class="password-display">
         <label for="password" class="visually-hidden">Generated password</label>
-        <input
-          type="text"
-          id="password"
-          class="password-display__value"
-          placeholder="P4$5W0rD!"
-          autocomplete="off"
-          spellcheck="false"
-          readonly
-        />
+        <div class="password-display__field">
+          <input
+            type="text"
+            id="password"
+            class="password-display__value"
+            placeholder="P4$5W0rD!"
+            autocomplete="off"
+            spellcheck="false"
+            readonly
+          />
+        </div>
         <!-- Живой регион: пуст при загрузке, TS вписывает «Copied» после копирования -->
         <p id="copy-status" class="password-display__status" role="status"></p>
         <button
@@ -46,7 +60,7 @@
         </button>
       </div>
 
-      <!-- Карточка настроек: TS перехватит submit -->
+      <!-- Карточка настроек: submit перехватывает TS и генерирует пароль без перезагрузки -->
       <form id="generator-form" class="settings">
         <div class="settings__length">
           <div class="settings__length-header">
@@ -126,16 +140,15 @@
           </div>
         </fieldset>
 
-        <!-- Низ карточки: свой шаг между блоком силы и кнопкой (16 / 32), стили — этап 05 -->
+        <!-- Низ карточки: блок силы, кнопка Generate и подсказка; свой отступ между силой и кнопкой (16 / 32) -->
         <div class="settings__footer">
-          <!-- Контракт для SCSS (этап 05) и TS (этап 06): data-strength = "" | too-weak | weak | medium | strong -->
-          <div
-            id="strength"
-            class="strength"
-            data-strength=""
-            aria-live="polite"
-            aria-atomic="true"
-          >
+          <!--
+            Состояние силы пароля: data-strength = "" | too-weak | weak | medium | strong.
+            SCSS красит полоски по этому атрибуту, TS выставляет значение после генерации.
+            Пустая строка — пароль ещё не сгенерирован.
+            Это не живой регион: о генерации и уровне силы объявляет #generator-status.
+          -->
+          <div id="strength" class="strength" data-strength="">
             <p class="strength__label">Strength</p>
             <div class="strength__meter">
               <p id="strength-level" class="strength__level"></p>
@@ -165,8 +178,10 @@
             </svg>
           </button>
 
-          <!-- Подсказка: пуста при загрузке, текст выводит TS на этапе 06 -->
+          <!-- Подсказка: пуста при загрузке, TS выводит текст, если настройки не позволяют сгенерировать пароль -->
           <p id="generator-hint" class="settings__hint" role="status"></p>
+          <!-- Невидимый статус для скринридера: TS объявляет «пароль сгенерирован» и уровень силы -->
+          <p id="generator-status" class="visually-hidden" role="status"></p>
         </div>
       </form>
     </main>

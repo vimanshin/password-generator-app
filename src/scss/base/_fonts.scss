@@ -1,10 +1,11 @@
 // Подключение шрифтов проекта.
 // В макете используется только JetBrains Mono Bold, поэтому грузим одно начертание.
+// Только woff2: его понимают все актуальные браузеры, fallback на ttf не нужен.
 
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
   font-weight: 700;
-  src: url('@/assets/fonts/static/JetBrainsMono-Bold.ttf') format('truetype');
+  src: url('@/assets/fonts/JetBrainsMono-Bold.woff2') format('woff2');
   font-display: swap;
 }

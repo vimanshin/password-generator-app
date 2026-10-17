@@ -48,10 +48,42 @@ const lengthOutput = getElement('length-value', HTMLOutputElement);
 const strengthBlock = getElement('strength', HTMLDivElement);
 const strengthLevel = getElement('strength-level', HTMLParagraphElement);
 const hint = getElement('generator-hint', HTMLParagraphElement);
+const generatorStatus = getElement('generator-status', HTMLParagraphElement);
 
 // Один таймер на обе фазы статуса: «показать Copied» и «спрятать Copied».
 // window.setTimeout всегда возвращает number (DOM), без конфликта с типами Node
 let copyStatusTimer: number | undefined;
+
+// Функция: создаёт «диктора» для live region — функцию, которая сначала очищает
+// регион, а через паузу пишет текст, чтобы скринридер прочитал даже повтор.
+// Таймер живёт в замыкании, поэтому у каждого региона он свой
+// Принимает: элемент live region (role="status")
+// Возвращает: функцию объявления; пустая строка очищает регион сразу
+function createAnnouncer(region: HTMLElement): (message: string) => void {
+  let announceTimer: number | undefined;
+
+  // Функция: отменяет отложенную запись, очищает регион и планирует новый текст
+  // Принимает: текст объявления или пустую строку
+  // Возвращает: ничего
+  return (message) => {
+    window.clearTimeout(announceTimer);
+    announceTimer = undefined;
+    // Строго пустая строка, иначе не сработает :empty в SCSS
+    region.textContent = '';
+
+    if (message === '') return;
+
+    // Колбэк: после паузы записывает текст в уже пустой регион
+    announceTimer = window.setTimeout(() => {
+      region.textContent = message;
+    }, ANNOUNCE_DELAY_MS);
+  };
+}
+
+// Подсказка под кнопкой: пустая строка прячет её через :empty
+const setHint = createAnnouncer(hint);
+// Невидимый статус генерации — только для скринридера
+const announceGeneratorStatus = createAnnouncer(generatorStatus);
 
 // Функция: находит чекбокс набора внутри формы по атрибуту name
 // Принимает: имя набора символов
@@ -103,22 +135,13 @@ function syncLengthDisplay(): void {
   updateSliderFill();
 }
 
-// Функция: показывает уровень силы; текст меняет, только если уровень другой,
-// чтобы live region не объявлял одно и то же повторно
+// Функция: показывает уровень силы визуально; скринридеру его объявляет
+// #generator-status, поэтому #strength больше не live region
 // Принимает: новый уровень силы
 // Возвращает: ничего
 function renderStrength(level: StrengthLevel): void {
-  if (strengthBlock.dataset.strength === level) return;
-
   strengthBlock.dataset.strength = level;
   strengthLevel.textContent = STRENGTH_LABELS[level];
-}
-
-// Функция: выводит подсказку под кнопкой; пустая строка прячет её через :empty
-// Принимает: текст подсказки или пустую строку
-// Возвращает: ничего
-function setHint(message: string): void {
-  hint.textContent = message;
 }
 
 // Функция: прячет «Copied» и отменяет любую запланированную фазу статуса
@@ -183,7 +206,15 @@ async function handleCopyClick(): Promise<void> {
   showCopiedStatus();
 }
 
-// Функция: проверяет настройки, генерирует пароль и обновляет силу
+// Функция: прячет подсказку, как только пользователь меняет настройки, —
+// старый совет («выбери набор», «скопируй вручную») к новым настройкам уже не относится
+// Принимает: ничего — событие input всплывает от слайдера и чекбоксов до формы
+// Возвращает: ничего
+function handleSettingsInput(): void {
+  setHint('');
+}
+
+// Функция: проверяет настройки, генерирует пароль и объявляет результат
 // Принимает: событие отправки формы
 // Возвращает: ничего
 function handleFormSubmit(event: SubmitEvent): void {
@@ -193,23 +224,32 @@ function handleFormSubmit(event: SubmitEvent): void {
   const selectedSets = getSelectedSets();
 
   if (length === 0) {
+    // Отменяем возможное отложенное «New password generated» от прошлого клика
+    announceGeneratorStatus('');
     setHint(HINT_ZERO_LENGTH);
     return;
   }
 
   if (selectedSets.length === 0) {
+    announceGeneratorStatus('');
     setHint(HINT_NO_SETS);
     return;
   }
 
+  const strength = getStrength(length, selectedSets.length);
+
   passwordInput.value = generatePassword(length, selectedSets);
-  renderStrength(getStrength(length, selectedSets.length));
+  renderStrength(strength);
   // Новый пароль ещё не скопирован — «Copied» рядом с ним был бы ложью
   resetCopyStatus();
   setHint('');
+  announceGeneratorStatus(
+    `New password generated. Strength: ${STRENGTH_LABELS[strength]}`
+  );
 }
 
 lengthSlider.addEventListener('input', syncLengthDisplay);
+form.addEventListener('input', handleSettingsInput);
 form.addEventListener('submit', handleFormSubmit);
 copyButton.addEventListener('click', handleCopyClick);
 
