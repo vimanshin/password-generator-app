@@ -32,7 +32,7 @@
 - [x] 05. Блок силы (`data-strength`) и кнопка GENERATE · `scss-writer`
 - [x] 06. Логика генерации, силы и заливки слайдера · `ts-writer`
 - [x] 07. Копирование в буфер, состояние COPIED, `aria-live` · `ts-writer`
-- [ ] 08. Финал: woff2, Playwright 375/768/1440, `final-review`, README · `final-review`
+- [x] 08. Финал: woff2, Playwright 375/768/1440, `final-review`, README · `final-review`
 
 ## Критерии готовности каждого этапа
 
