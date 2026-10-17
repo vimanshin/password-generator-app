@@ -1,3 +1,4 @@
+@use 'sass:list';
 @use 'variables';
 
 // Брейкпоинты в подходе mobile-first: базовые стили пишутся без media query,
@@ -30,6 +31,37 @@
 @mixin reduced-motion {
   @media (prefers-reduced-motion: reduce) {
     @content;
+  }
+}
+
+// Миксин: фокус-кольцо в акцентном цвете.
+// $offset — зазор между краем элемента и линией outline
+@mixin focus-ring($offset: 2px) {
+  outline: 2px solid var(--color-green-200);
+  outline-offset: $offset;
+}
+
+// Функция: собирает значение transition — каждому свойству общие длительность и easing.
+// Цикл вынесен из миксина: stylelint требует, чтобы декларации шли раньше at-rules
+@function -transition-value($properties) {
+  $duration: 0.2s;
+  $easing: ease;
+  $value: ();
+
+  @each $property in $properties {
+    $value: list.append($value, $property $duration $easing, $separator: comma);
+  }
+
+  @return $value;
+}
+
+// Миксин: плавная смена перечисленных свойств.
+// Сам отключает transition для тех, кто просил уменьшить движение
+@mixin transition($properties...) {
+  transition: -transition-value($properties);
+
+  @include reduced-motion {
+    transition: none;
   }
 }
 

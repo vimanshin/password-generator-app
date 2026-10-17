@@ -14,7 +14,7 @@
 ## Checklist
 
 - [x] Этап 0. Baseline — [stage-00-baseline.md](stage-00-baseline.md)
-- [ ] Этап 1. Мёртвый код (F1–F3) — [stage-01-dead-code.md](stage-01-dead-code.md)
+- [x] Этап 1. Мёртвый код (F1–F3) — [stage-01-dead-code.md](stage-01-dead-code.md)
 - [ ] Этап 2. Миксины focus-ring и transition (F4, F5) — [stage-02-mixins.md](stage-02-mixins.md)
 - [ ] Этап 3. Магические и лишние значения SCSS (F6–F8) — [stage-03-scss-values.md](stage-03-scss-values.md)
 - [ ] Этап 4. TypeScript: announcer и валидация (F9, F10) — [stage-04-typescript.md](stage-04-typescript.md)

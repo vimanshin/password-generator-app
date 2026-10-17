@@ -1,6 +1,6 @@
 # Этап 1. Мёртвый код
 
-**Статус:** ✅ проверено, ждёт коммита · **Findings:** F1, F2, F3 · **Риск:** 🟢 · **Writer:** scss-writer, ts-writer
+**Статус:** ✅ готово · **Findings:** F1, F2, F3 · **Риск:** 🟢 · **Writer:** scss-writer, ts-writer
 
 ## Контроль риска
 
@@ -25,4 +25,4 @@
 - CSS и JS: побайтно идентичны baseline (те же хеши `index-B0wyysqq.css`, `index-CdAF9u24.js`) — скриншоты совпадают автоматически
 - Grep по `breakpoint-desktop`, `tablet-only`, `mixins.desktop`: 0 совпадений
 - Попутно: `refactoring/baseline` добавлен в `.prettierignore`
-- Коммит: _после подтверждения_
+- Коммит: `ec0d5d6`

@@ -17,13 +17,8 @@
   // Прозрачная рамка невидима на светлом фоне, а на hover меняется только цвет
   border: 2px solid transparent;
   border-radius: 50%;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
 
-  @include mixins.reduced-motion {
-    transition: none;
-  }
+  @include mixins.transition(background-color, border-color);
 }
 
 // Миксин: вид ползунка при наведении на слайдер
@@ -123,8 +118,7 @@
 
     // Рамка вокруг всего слайдера — как у поля пароля
     &:focus-visible {
-      outline: 2px solid var(--color-green-200);
-      outline-offset: 2px;
+      @include mixins.focus-ring;
     }
   }
 
@@ -156,9 +150,6 @@
     cursor: pointer;
     background-color: transparent;
     border: 2px solid var(--color-grey-200);
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease;
 
     // Галочка — фоновая картинка: у input псевдоэлементы ненадёжны
     &:checked {
@@ -175,13 +166,10 @@
     }
 
     &:focus-visible {
-      outline: 2px solid var(--color-green-200);
-      outline-offset: 2px;
+      @include mixins.focus-ring;
     }
 
-    @include mixins.reduced-motion {
-      transition: none;
-    }
+    @include mixins.transition(background-color, border-color);
   }
 
   &__option-label {
@@ -214,9 +202,6 @@
 
     // Рамка есть всегда: на hover меняется только фон, и кнопка не прыгает на 2px
     border: 2px solid var(--color-green-200);
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease;
 
     // Стрелка залита currentColor, поэтому перекрашивается вместе с текстом
     &:hover {
@@ -226,15 +211,11 @@
 
     // Между рамкой и outline остаётся тёмная полоса 2px — линии не сливаются
     &:focus-visible {
-      outline: 2px solid var(--color-green-200);
-      outline-offset: 2px;
+      @include mixins.focus-ring;
     }
 
     @include mixins.text-preset-4;
-
-    @include mixins.reduced-motion {
-      transition: none;
-    }
+    @include mixins.transition(background-color, color);
   }
 
   &__generate-icon {
