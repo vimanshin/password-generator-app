@@ -1,0 +1,30 @@
+@use '../abstracts/mixins';
+
+// Колонка приложения: заголовок, поле пароля и карточка настроек
+.generator {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-200);
+  max-width: 33.75rem; // 540
+
+  // На tablet колонка встаёт по центру, на mobile auto ничего не меняет
+  margin-inline: auto;
+
+  &__title {
+    color: var(--color-grey-600);
+    text-align: center;
+
+    @include mixins.text-preset-4;
+
+    @include mixins.tablet {
+      // Заголовок → поле пароля в Figma 32: gap 24 + 8
+      margin-block-end: var(--spacing-100);
+
+      @include mixins.text-preset-2;
+    }
+  }
+
+  @include mixins.tablet {
+    gap: var(--spacing-300);
+  }
+}

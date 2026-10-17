@@ -1,0 +1,297 @@
+@use '../abstracts/mixins';
+
+// Ползунок слайдера описан один раз, а подключается в два правила:
+// ::-webkit-slider-thumb и ::-moz-range-thumb нельзя писать через запятую —
+// браузер, не знающий один из селекторов, выбросит всё правило целиком.
+
+// Миксин: базовый вид ползунка слайдера — круг 28×28
+@mixin slider-thumb {
+  // Псевдоэлемент не попадает под глобальный *, поэтому box-sizing задаём явно:
+  // рамка рисуется внутри 28px и на hover круг не растёт
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  background-color: var(--color-grey-200);
+
+  // Прозрачная рамка невидима на светлом фоне, а на hover меняется только цвет
+  border: 2px solid transparent;
+  border-radius: 50%;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  @include mixins.reduced-motion {
+    transition: none;
+  }
+}
+
+// Миксин: вид ползунка при наведении на слайдер
+@mixin slider-thumb-hover {
+  background-color: var(--color-grey-850);
+  border-color: var(--color-green-200);
+}
+
+// Карточка настроек: длина, опции, сила пароля и кнопка
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-400);
+  padding: var(--spacing-200);
+  background-color: var(--color-grey-800);
+
+  &__length {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-100);
+  }
+
+  &__length-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__label {
+    color: var(--color-grey-200);
+
+    @include mixins.text-preset-4;
+  }
+
+  &__length-value {
+    color: var(--color-green-200);
+
+    @include mixins.text-preset-2;
+  }
+
+  &__slider {
+    // Доля заливки трека в процентах; TS обновляет её при каждом input
+    --fill: 0%;
+
+    display: block;
+    width: 100%;
+
+    // Высота по ползунку, иначе он вылезет за пределы input
+    height: 28px;
+    margin: 0;
+    appearance: none;
+    cursor: pointer;
+    background: transparent;
+
+    // Chromium и Safari: нативной заливки нет, рисуем её градиентом
+    // с жёсткой границей цветов в точке --fill
+    &::-webkit-slider-runnable-track {
+      height: 8px;
+      background: linear-gradient(
+        to right,
+        var(--color-green-200) var(--fill),
+        var(--color-grey-850) var(--fill)
+      );
+    }
+
+    // (8 - 28) / 2 = -10px: WebKit прижимает ползунок к верху трека
+    &::-webkit-slider-thumb {
+      margin-top: -10px;
+      appearance: none;
+
+      @include slider-thumb;
+    }
+
+    // Firefox: пустой трек и нативная заливка до ползунка
+    &::-moz-range-track {
+      height: 8px;
+      background-color: var(--color-grey-850);
+    }
+
+    &::-moz-range-progress {
+      height: 8px;
+      background-color: var(--color-green-200);
+    }
+
+    // Firefox сам центрирует ползунок на треке, margin не нужен
+    &::-moz-range-thumb {
+      @include slider-thumb;
+    }
+
+    &:hover::-webkit-slider-thumb {
+      @include slider-thumb-hover;
+    }
+
+    &:hover::-moz-range-thumb {
+      @include slider-thumb-hover;
+    }
+
+    // Рамка вокруг всего слайдера — как у поля пароля
+    &:focus-visible {
+      outline: 2px solid var(--color-green-200);
+      outline-offset: 2px;
+    }
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-200);
+
+    // min-inline-size: 0 — fieldset по умолчанию не сжимается уже контента
+    min-inline-size: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  &__option {
+    display: flex;
+    gap: var(--spacing-200);
+    align-items: center;
+  }
+
+  &__checkbox {
+    // Не даём квадрату сплющиться, если длинная подпись займёт всю строку
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    appearance: none;
+    cursor: pointer;
+    background-color: transparent;
+    border: 2px solid var(--color-grey-200);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+
+    // Галочка — фоновая картинка: у input псевдоэлементы ненадёжны
+    &:checked {
+      background-color: var(--color-green-200);
+      background-image: url('@/assets/images/icon-check.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      border-color: var(--color-green-200);
+    }
+
+    // Hover на всю строку: курсор над подписью тоже подсвечивает квадрат
+    .settings__option:hover & {
+      border-color: var(--color-green-200);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-green-200);
+      outline-offset: 2px;
+    }
+
+    @include mixins.reduced-motion {
+      transition: none;
+    }
+  }
+
+  &__option-label {
+    color: var(--color-grey-200);
+    cursor: pointer;
+
+    @include mixins.text-preset-4;
+  }
+
+  &__footer {
+    // Опорная точка для пустой подсказки с position: absolute
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-200);
+  }
+
+  &__generate {
+    display: flex;
+    gap: var(--spacing-200);
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: var(--spacing-700); // 56
+    padding: 0 var(--spacing-200);
+    color: var(--color-grey-800);
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: var(--color-green-200);
+
+    // Рамка есть всегда: на hover меняется только фон, и кнопка не прыгает на 2px
+    border: 2px solid var(--color-green-200);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+
+    // Стрелка залита currentColor, поэтому перекрашивается вместе с текстом
+    &:hover {
+      color: var(--color-green-200);
+      background-color: transparent;
+    }
+
+    // Между рамкой и outline остаётся тёмная полоса 2px — линии не сливаются
+    &:focus-visible {
+      outline: 2px solid var(--color-green-200);
+      outline-offset: 2px;
+    }
+
+    @include mixins.text-preset-4;
+
+    @include mixins.reduced-motion {
+      transition: none;
+    }
+  }
+
+  &__generate-icon {
+    flex-shrink: 0;
+
+    // Размер задаём явно: base-reset ставит svg { height: auto }
+    width: 0.75rem; // 12
+    height: 0.75rem;
+  }
+
+  &__hint {
+    // orange-400 на grey-800 — 6.01:1; red-500 даёт лишь 4.44:1 и не проходит AA
+    color: var(--color-orange-400);
+    text-align: center;
+
+    // Пустая подсказка выходит из потока и не добавляет gap футера,
+    // но остаётся в дереве доступности как live region
+    &:empty {
+      @include mixins.visually-hidden;
+    }
+
+    @include mixins.text-preset-4;
+  }
+
+  @include mixins.tablet {
+    // Снизу в Figma 41px (карточка 528): ближайший токен — 40
+    padding: var(--spacing-300) var(--spacing-400) var(--spacing-500);
+
+    &__length {
+      gap: var(--spacing-200);
+    }
+
+    &__label {
+      @include mixins.text-preset-3;
+    }
+
+    &__length-value {
+      @include mixins.text-preset-1;
+    }
+
+    &__option {
+      gap: var(--spacing-300);
+    }
+
+    &__option-label {
+      @include mixins.text-preset-3;
+    }
+
+    &__footer {
+      gap: var(--spacing-400);
+    }
+
+    &__generate {
+      gap: var(--spacing-300);
+      min-height: 4.0625rem; // 65
+
+      @include mixins.text-preset-3;
+    }
+  }
+}
