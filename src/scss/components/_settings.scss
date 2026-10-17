@@ -1,16 +1,21 @@
+@use 'sass:math';
 @use '../abstracts/mixins';
+
+// Размеры слайдера: из них же считается сдвиг ползунка в WebKit
+$slider-thumb-size: 28px;
+$slider-track-height: 8px;
 
 // Ползунок слайдера описан один раз, а подключается в два правила:
 // ::-webkit-slider-thumb и ::-moz-range-thumb нельзя писать через запятую —
 // браузер, не знающий один из селекторов, выбросит всё правило целиком.
 
-// Миксин: базовый вид ползунка слайдера — круг 28×28
+// Миксин: базовый вид ползунка слайдера — круг $slider-thumb-size
 @mixin slider-thumb {
   // Псевдоэлемент не попадает под глобальный *, поэтому box-sizing задаём явно:
-  // рамка рисуется внутри 28px и на hover круг не растёт
+  // рамка рисуется внутри размера ползунка и на hover круг не растёт
   box-sizing: border-box;
-  width: 28px;
-  height: 28px;
+  width: $slider-thumb-size;
+  height: $slider-thumb-size;
   cursor: pointer;
   background-color: var(--color-grey-200);
 
@@ -48,8 +53,6 @@
   }
 
   &__label {
-    color: var(--color-grey-200);
-
     @include mixins.text-preset-4;
   }
 
@@ -67,7 +70,7 @@
     width: 100%;
 
     // Высота по ползунку, иначе он вылезет за пределы input
-    height: 28px;
+    height: $slider-thumb-size;
     margin: 0;
     appearance: none;
     cursor: pointer;
@@ -76,7 +79,7 @@
     // Chromium и Safari: нативной заливки нет, рисуем её градиентом
     // с жёсткой границей цветов в точке --fill
     &::-webkit-slider-runnable-track {
-      height: 8px;
+      height: $slider-track-height;
       background: linear-gradient(
         to right,
         var(--color-green-200) var(--fill),
@@ -84,9 +87,10 @@
       );
     }
 
-    // (8 - 28) / 2 = -10px: WebKit прижимает ползунок к верху трека
+    // WebKit прижимает ползунок к верху трека: сдвигаем его вверх
+    // на половину разницы высот, чтобы центры ползунка и трека совпали
     &::-webkit-slider-thumb {
-      margin-top: -10px;
+      margin-top: math.div($slider-track-height - $slider-thumb-size, 2);
       appearance: none;
 
       @include slider-thumb;
@@ -94,12 +98,12 @@
 
     // Firefox: пустой трек и нативная заливка до ползунка
     &::-moz-range-track {
-      height: 8px;
+      height: $slider-track-height;
       background-color: var(--color-grey-850);
     }
 
     &::-moz-range-progress {
-      height: 8px;
+      height: $slider-track-height;
       background-color: var(--color-green-200);
     }
 
@@ -173,7 +177,6 @@
   }
 
   &__option-label {
-    color: var(--color-grey-200);
     cursor: pointer;
 
     @include mixins.text-preset-4;

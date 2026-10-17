@@ -1,6 +1,6 @@
 # Этап 2. Миксины focus-ring и transition
 
-**Статус:** ✅ проверено, ждёт коммита · **Findings:** F4, F5 · **Риск:** 🟡 · **Writer:** scss-writer
+**Статус:** ✅ готово · **Findings:** F4, F5 · **Риск:** 🟡 · **Writer:** scss-writer
 
 ## Контроль риска
 
@@ -27,4 +27,4 @@
 - Фокус (Tab): поле пароля 2px/2px, copy 2px/0, слайдер, чекбокс, Generate 2px/2px ✅
 - Hover Generate: цвет и фон как прежде ✅; reduced-motion: `transition: none` у copy, checkbox, Generate ✅
 - Console: 0 errors / 0 warnings
-- Коммит: _после подтверждения_
+- Коммит: `057689b`
